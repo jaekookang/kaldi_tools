@@ -1,0 +1,2 @@
+compute-cmvn-stats --spk2utt=ark:prep_out/data/spk2utt scp:prep_out/data/feats.scp ark,scp:/home/zzandore/zzandore/project/kaldi_tools/tools/make_prep_files/prep_out/data/data/cmvn_data.ark,/home/zzandore/zzandore/project/kaldi_tools/tools/make_prep_files/prep_out/data/data/cmvn_data.scp 
+LOG (compute-cmvn-stats[5.2.38~1-b82b8]:main():compute-cmvn-stats.cc:171) Done accumulating CMVN stats for 11 utterances; 0 had errors.

@@ -1,0 +1,20 @@
+#!/bin/bash
+
+# Yvonne Hong
+
+mono_scale_opts="--transition-scale=1.0 --acoustic-scale=0.1 --self-loop-scale=0.1"
+mono_num_iters=40    # Number of iterations of training
+mono_max_iter_inc=30 # Last iter to increase #Gauss on.
+mono_totgauss=1000 # Target #Gaussians.
+mono_boost_silence=1.0 # Factor by which to boost silence likelihoods in alignment
+mono_power=0.25 # exponent to determine number of gaussians from occurrence counts
+mono_cmvn_opts="--norm-means=true --norm-vars=false"  # can be used to add extra options to cmvn.
+
+export mono_scale_opts
+export mono_num_iters
+export mono_max_iter_inc
+export mono_totgauss
+export mono_boost_silence
+export mono_power
+export mono_cmvn_opts
+

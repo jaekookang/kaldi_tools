@@ -1,0 +1,7 @@
+# set -o pipefail && ali-to-phones --write-lengths=true align/11/final.mdl "ark:gunzip -c align/11/ali.1.gz|" ark,t:- | sed -E "s/^[^ ]+ //" | awk 'BEGIN{FS=" ; "; OFS="\n";} {print "begin " $1; print "end " $NF; for (n=1;n<=NF;n++) print "all " $n; }' | sort | uniq -c | gzip -c > align/11/phone_stats.1.gz 
+# Started at Sat Jan 20 14:12:53 KST 2018
+#
+ali-to-phones --write-lengths=true align/11/final.mdl 'ark:gunzip -c align/11/ali.1.gz|' ark,t:- 
+LOG (ali-to-phones[5.2.38~1-b82b8]:main():ali-to-phones.cc:134) Done 11 utterances.
+# Accounting: time=0 threads=1
+# Ended (code 0) at Sat Jan 20 14:12:53 KST 2018, elapsed time 0 seconds

@@ -7,5 +7,8 @@
 - result: result files (.txt, .pdf etc.)
 
 ### TODO
-- update tools for ali.*.gz, hmm, visualization code etc.
 - add minimal_kaldi tutorial 
+
+### Thanks to
+- Yvonne Hong
+- Hyungwon Yang
