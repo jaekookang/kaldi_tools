@@ -14,6 +14,8 @@ class GetParam():
 
     tested only on Librispeech output
 
+    # TODO: Combine two attributes (Obj.pdf, Obj.gmm) into Obj.gmm
+
     Note:
     - gmm_id: same as pdf id
 
@@ -24,8 +26,9 @@ class GetParam():
     - sets_txt:
 
     Output:
-    - HMM dictionary
-    - GMM dictionary
+    - HMM dictionary (HMM parameters)
+    - GMM dictionary (GMM parameters)
+    - pdf-id dictionary (pdf-if --> phone)
 
     '''
 
@@ -129,12 +132,14 @@ class GetParam():
 
         # Save HMM-GMM info
         self.hmm = {}
+        self.pdf = {}
         beg = self.get_index(mdl_raw, '</ForPhones>')
         end = self.get_index(mdl_raw, '</TopologyEntry>')
         nsil_states = [i for i in range(end[0] - beg[0] - 1)]  # e.g. 3
         sil_states = [i for i in range(end[1] - beg[1] - 1)]  # e.g. 5
         ts_idxs = self.get_index(
             self.trans_raw, 'Transition-state') + [len(self.trans_raw)]
+
         # for nonsilence phones
         n_state = len(nsil_states)
         for ph in self.nonsil_phones:  # loop through phones
@@ -172,6 +177,11 @@ class GetParam():
             self.hmm[ph]['trans_prob'] = trans_matrix
             self.hmm[ph]['self_loop_prob'] = self_loop_prob
             self.hmm[ph]['gmm_id'] = gmm_id
+
+            # write pdf id for phone
+            for i, g in enumerate(gmm_id):
+                self.pdf[g] = (ph, i)
+
         print('  nonsilence phones were succefully loaded')
 
         # for silence phones
@@ -211,21 +221,27 @@ class GetParam():
             self.hmm[ph]['trans_prob'] = trans_matrix
             self.hmm[ph]['self_loop_prob'] = self_loop_prob
             self.hmm[ph]['gmm_id'] = gmm_id
+
+            # write pdf id for phone
+            for i, g in enumerate(gmm_id):
+                self.pdf[g] = (ph, i)  # (phone, num state)
+
         print('  silence phones were succefully loaded')
         print('{} is loaded'.format(self.mdl_txt))
         return print('''
         ==============================================================
         Now try following:
-        
+
         >> H.hmm['{0}'].keys() # get each phone info
            dict_keys(['states', 'trans_prob', 'self_loop_prob', 'gmm_id'])
         >> H.hmm['{0}']['gmm_id'] # get gmm id (=pdf id)
            {1}
-        >> H.gmm[{1}].keys() # access gmm info
-           {2}
-        ==============================================================        
+        >> H.gmm[{2}].keys() # access gmm info
+           {3}
+        ==============================================================
         '''.format(self.nonsil_phones[0],
                    str(self.hmm[self.nonsil_phones[0]]['gmm_id']),
+                   str(self.hmm[self.nonsil_phones[0]]['gmm_id'][0]),
                    str(self.gmm[self.hmm[self.nonsil_phones[0]]['gmm_id'][0]].keys())))
 
     def get_index(self, target, pattern):
@@ -254,7 +270,7 @@ class GetParam():
     def draw_hmm(self, phone, save_dir, remove_dot=True):
         '''
         Draw HMM diagram for a phone and save output .pdf under 'save_dir'
-        e.g. 
+        e.g.
         >> H = GetHMM(mdl_txt, trans_txt, phones_txt, sets_txt)
         >> H.draw_hmm('AA_B')
         '''
